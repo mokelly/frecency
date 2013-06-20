@@ -2,12 +2,17 @@
 Frecency library.
 ==================================
 
-Implementation of exponentially weighted frecency.
+Implementation of exponentially weighted frecency (similar to http://mathb.in/708 )
 
 
 
 
-### TODO: Django model?  (a la http://djangosnippets.org/snippets/1694/)
+* TODO: Django model?  (a la http://djangosnippets.org/snippets/1694/)
+* TODO: Fast containers (Numpy array?  heapq?) with sortability, random sampling, histogram, percentiles, top-k
+* TODO: https://read-the-docs.readthedocs.org/en/latest/getting_started.html
+* TODO: Automatic half-life determination based on overall usage.
+* TODO: Add exponentially weighted averaging.
+
 
 by Michael J.T. O'Kelly, 2013-05-05
 """
@@ -16,6 +21,8 @@ import time
 import warnings
 
 from numpy import logaddexp2, log2
+import numpy
+
 
 DEFAULT_TIME0 = time.mktime((2014, 1, 1, 0, 0, 0, 0, 0, 0))  # Arbitrarily chosen base time for exponential weight normalization
 
@@ -80,6 +87,8 @@ class Frecency():
             return cmp(present_weight1, present_weight2)
 
 
+ 
+
 
 if __name__ == '__main__':
     f1 = Frecency()
@@ -109,7 +118,7 @@ if __name__ == '__main__':
 
     f1 = Frecency(suppress_warnings=False)
     f2 = Frecency()
-    f2 = Frecency(timescale=1.
+    f2 = Frecency(timescale=1.,
                   fast_comparisons = False,
                   suppress_warnings = False)
     f1.increment(10, yesterday)
