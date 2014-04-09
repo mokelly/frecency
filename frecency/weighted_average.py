@@ -19,7 +19,7 @@ class WeightedAverage():
     than zero."""
     # TODO: Arbitrary values could potentially be accepted by keeping
     # an offset value
-    def __init__(self, timescale=24. * 60. * 60.):
+    def __init__(self, timescale=frecency.DEFAULT_TIMESCALE):
         """* *timescale* is the halflife of events, in seconds.  With the default (24 hours)
         an event now counts twice as much as an event 24 hours ago."""
         self.n_sum = frecency.Frecency(timescale)  # Weight accumulator

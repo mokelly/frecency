@@ -13,6 +13,7 @@ Implementation of exponentially weighted frecency (similar to http://mathb.in/70
 * TODO: Automatic half-life determination based on overall usage.
 * TODO: Add exponentially weighted averaging.
 * TODO: Standard arithmetic operations, where 2nd argument can be Frecency or number
+* TODO: Overflow and underflow detection
 
 
 by Michael J.T. O'Kelly, 2013-05-05
@@ -26,10 +27,11 @@ import numpy
 
 
 DEFAULT_TIME0 = time.mktime((2014, 1, 1, 0, 0, 0, 0, 0, 0))  # Arbitrarily chosen base time for exponential weight normalization
+DEFAULT_TIMESCALE = 24. * 60. * 60.
 
 
 class Frecency():
-    def __init__(self, timescale = 24. * 60. * 60.,
+    def __init__(self, timescale = DEFAULT_TIMESCALE,
                  start_value = 0.,
                  time0 = DEFAULT_TIME0,
                  suppress_warnings = False,
