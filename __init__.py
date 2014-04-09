@@ -12,6 +12,7 @@ Implementation of exponentially weighted frecency (similar to http://mathb.in/70
 * TODO: https://read-the-docs.readthedocs.org/en/latest/getting_started.html
 * TODO: Automatic half-life determination based on overall usage.
 * TODO: Add exponentially weighted averaging.
+* TODO: Standard arithmetic operations, where 2nd argument can be Frecency or number
 
 
 by Michael J.T. O'Kelly, 2013-05-05
