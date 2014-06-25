@@ -5,13 +5,9 @@ Frecency library.
 Implementation of exponentially weighted frecency (similar to http://mathb.in/708 )
 
 
-
-
-* TODO: Django model?  (a la http://djangosnippets.org/snippets/1694/)
 * TODO: Fast containers (Numpy array?  heapq?) with sortability, random sampling, histogram, percentiles, top-k
 * TODO: https://read-the-docs.readthedocs.org/en/latest/getting_started.html
 * TODO: Automatic half-life determination based on overall usage.
-* TODO: Add exponentially weighted averaging.
 * TODO: Standard arithmetic operations, where 2nd argument can be Frecency or number
 * TODO: Overflow and underflow detection
 
