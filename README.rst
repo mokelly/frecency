@@ -1,11 +1,8 @@
-Frecency library.
+Frecency for Python and Django
 ==================================
 
-Implementation of exponentially weighted frecency.
+Efficient data structures for recency-weighted counting and measurements.
 
 
 
 
-### TODO: Django model?  (a la http://djangosnippets.org/snippets/1694/)
-
-by Michael J.T. O'Kelly, 2013-05-05

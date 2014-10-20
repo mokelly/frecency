@@ -43,7 +43,7 @@ setup(
     include_package_data=True,
     install_requires=req_list,
     license='MIT',
-    keywords=('frecency', 'frequency', 'recency', 'django', 'statistics'),
+    keywords=('frecency', 'frequency', 'recency', 'django', 'statistics', 'counting', 'measurement', 'data science'),
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
