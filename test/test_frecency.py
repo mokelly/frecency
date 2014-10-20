@@ -1,3 +1,4 @@
+from __future__ import division
 
 import random
 import time
@@ -68,7 +69,7 @@ def test_weighted_average():
     w = WeightedAverage(timescale=timescale)
     num_samples = 100000
     samples = []
-    for i in xrange(num_samples):
+    for i in range(num_samples):
         sample = random.random()  # Mean 0.5, std 12**-0.5
         w.add_sample(sample, event_time=now)
         samples.append(sample)

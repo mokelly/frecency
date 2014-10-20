@@ -15,6 +15,10 @@ Implementation of exponentially weighted frecency (similar to http://mathb.in/70
 
 by Michael J.T. O'Kelly, 2013-05-05
 """
+from __future__ import division
+from __future__ import print_function
+from past.builtins import cmp
+from past.utils import old_div
 
 import time
 import warnings
@@ -27,7 +31,7 @@ DEFAULT_TIME0 = time.mktime((2017, 1, 1, 0, 0, 0, 0, 0, 0))  # Arbitrarily chose
 DEFAULT_TIMESCALE = 24. * 60. * 60.
 
 
-class Frecency():
+class Frecency(object):
     """Exponentially weighted frecency measure"""
     def __init__(self,
                  timescale=DEFAULT_TIMESCALE,
@@ -96,29 +100,29 @@ class Frecency():
 
 if __name__ == '__main__':
     f1 = Frecency()
-    print f1.get_present_weight(), f1.log2_value
+    print(f1.get_present_weight(), f1.log2_value)
     f1.increment()
-    print f1.get_present_weight(), f1.log2_value
+    print(f1.get_present_weight(), f1.log2_value)
     f1.increment(3)
-    print f1.get_present_weight(), f1.log2_value
+    print(f1.get_present_weight(), f1.log2_value)
 
     yesterday = time.time() - 24 * 60 * 60
     f1 = Frecency()
-    print f1.get_present_weight(), f1.log2_value
+    print(f1.get_present_weight(), f1.log2_value)
     f1.increment(event_time=yesterday)
-    print f1.get_present_weight(), f1.log2_value
+    print(f1.get_present_weight(), f1.log2_value)
     f1.increment()
-    print f1.get_present_weight(), f1.log2_value
+    print(f1.get_present_weight(), f1.log2_value)
     for i in range(10):
         f1.increment()
-        print f1.log2_value,
-    print
+        print(f1.log2_value, end=' ')
+    print()
 
     the_future = time.time() + 10 * 365 * 24 * 60 * 60
     f1 = Frecency(timescale=1.)
-    print f1.get_present_weight(), f1.log2_value
+    print(f1.get_present_weight(), f1.log2_value)
     f1.increment(event_time=the_future)
-    print f1.get_present_weight(event_time=the_future), f1.log2_value
+    print(f1.get_present_weight(event_time=the_future), f1.log2_value)
 
     f1 = Frecency(suppress_warnings=False)
     f2 = Frecency()
@@ -128,7 +132,7 @@ if __name__ == '__main__':
     f1.increment(10, yesterday)
     while f1 > f2:
         f2.increment(1.)
-        print f1.get_present_weight(), f2.get_present_weight()
+        print(f1.get_present_weight(), f2.get_present_weight())
 
 
 

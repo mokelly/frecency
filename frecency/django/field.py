@@ -15,16 +15,15 @@ from django.db import models
 import numpy
 
 import frecency
+from future.utils import with_metaclass
 
 
 DEFAULT_TIMESCALE = 24. * 60. * 60.
 
 
-class FrecencyField(models.FloatField):
+class FrecencyField(with_metaclass(models.SubfieldBase, models.FloatField)):
 
     description = "Field for storing Frecency objects"
-
-    __metaclass__ = models.SubfieldBase
 
     def __init__(self, timescale=DEFAULT_TIMESCALE, *args, **kwargs):
             self.timescale = timescale
@@ -45,7 +44,7 @@ class FrecencyField(models.FloatField):
     def to_python(self, value):
         if isinstance(value, frecency.Frecency):
             return value
-        elif isinstance(value, basestring):
+        elif isinstance(value, str):
             value = float(value)
         elif value is None:
             value = -numpy.Infinity

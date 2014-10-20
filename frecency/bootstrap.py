@@ -8,6 +8,8 @@ TODO: Implement purge of low-weight samples (automatic or manual) to reduce memo
 
 by Michael J.T. O'Kelly, 2014-04-09
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 import random
 import bisect
@@ -15,10 +17,10 @@ import bisect
 import numpy
 import numpy.random
 
-import frecency
+from . import frecency
 
 
-class Bootstrap():
+class Bootstrap(object):
     """Bootstrap random variable with exponentially weighted
     samples in time.
     This code is optimized for samples which are continuous variables.  For large
@@ -99,10 +101,10 @@ if __name__=='__main__':
     b.add_sample(4., event_time=start_time + 3)
     samples = b.get_samples(2 ** 20)
     sample_counts = Counter(samples)
-    print "time passed:", time.time() - start_time
-    print sample_counts
+    print("time passed:", time.time() - start_time)
+    print(sample_counts)
 
     b2 = b.resample(lambda s: s>2)
     samples2 = b2.get_samples(2 ** 20)
     sample_counts2 = Counter(samples2)
-    print sample_counts2
+    print(sample_counts2)

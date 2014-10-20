@@ -9,14 +9,17 @@ TODO: Graphical demo showing noisy data with abrupt shift in mean.
 
 by Michael J.T. O'Kelly, 2014-04-09
 """
+from __future__ import division
+from __future__ import print_function
+from __future__ import absolute_import
 
-import frecency
+from . import frecency
 
 
 OFFSET_DEFAULT = -1e-5  # Constant to help handle negative samples
 
 
-class WeightedAverage():
+class WeightedAverage(object):
     """Exponentially weighted average of a variable sampled over time.
     NOTE: The underlying data structure requires that all samples be greater
     than the initially given 'offset' value."""
@@ -93,5 +96,5 @@ if __name__=='__main__':
         # sample = random.gauss(10., 1.)
         sample = random.gauss(0., 1.)
         w.add_sample(sample)
-    print "time passed:", time.time() - start_time
-    print w.get_mean_std_uncertainty()
+    print("time passed:", time.time() - start_time)
+    print(w.get_mean_std_uncertainty())
