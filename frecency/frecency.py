@@ -10,6 +10,7 @@ Implementation of exponentially weighted frecency (similar to http://mathb.in/70
 * TODO: Automatic half-life determination based on overall usage.
 * TODO: Standard arithmetic operations, where 2nd argument can be Frecency or number
 * TODO: Overflow and underflow detection
+* TODO: Allow timescale and time0 to be changed on the fly (preserving present value)
 
 
 by Michael J.T. O'Kelly, 2013-05-05
@@ -22,7 +23,7 @@ from numpy import logaddexp2, log2
 import numpy
 
 
-DEFAULT_TIME0 = time.mktime((2014, 1, 1, 0, 0, 0, 0, 0, 0))  # Arbitrarily chosen base time for exponential weight normalization
+DEFAULT_TIME0 = time.mktime((2017, 1, 1, 0, 0, 0, 0, 0, 0))  # Arbitrarily chosen base time for exponential weight normalization
 DEFAULT_TIMESCALE = 24. * 60. * 60.
 
 
@@ -77,8 +78,10 @@ class Frecency():
         Compare the present weighted values of two Frecency objects.
         **Note:** Comparison is of doubtful value between Frecencies with different timescales.  A
         Warning will trigger if this is done, unless suppress_warnings is True.
-        If fast_comparisons == True, 
-        (Different values for time0 are correctly handled.)
+        If fast_comparisons == True, timescale and time0 are assumed to be equal
+        without checking.
+        If fast_comparisons == False, a completely general comparison
+        of present weights is used.
         """
         if self.fast_comparisons:
             return cmp(self.log2_value, frec2.log2_value)
@@ -89,9 +92,6 @@ class Frecency():
             present_weight1 = self.get_present_weight()
             present_weight2 = frec2.get_present_weight()
             return cmp(present_weight1, present_weight2)
-
-
- 
 
 
 if __name__ == '__main__':
