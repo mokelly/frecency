@@ -58,16 +58,16 @@ class WeightedAverage():
         self.x_sum.increment(offset_sample, event_time=event_time)
         self.x2_sum.increment(offset_sample ** 2, event_time=event_time)
 
-    def get_mean_std_uncertainty(self):
+    def get_mean_std_uncertainty(self, event_time=None):
         """Returns (mean, std, uncertainty) tuple of present best estimates.
 
         *uncertainty* is the estimated error of the *mean*.
 
         The accuracy of these estimates becomes dubious when
         the sample rate is smaller than the timescale."""
-        present_n = self.n_sum.get_present_weight()
-        present_x = self.x_sum.get_present_weight()
-        present_x2 = self.x2_sum.get_present_weight()
+        present_n = self.n_sum.get_present_weight(event_time=event_time)
+        present_x = self.x_sum.get_present_weight(event_time=event_time)
+        present_x2 = self.x2_sum.get_present_weight(event_time=event_time)
 
         offset_mean = present_x / present_n
         # Calculate the variance from the X^2 cumulant
