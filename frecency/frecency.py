@@ -70,6 +70,14 @@ class Frecency(object):
         log2_weight_added = (event_time - self.time0) / self.timescale + log2(value_added)
         self.log2_value = logaddexp2(self.log2_value, log2_weight_added)  # All calculations in log2 space to avoid overflow
 
+    def _increment_by_frecency(self, frecency_added, multiplier=1.):
+        """Increment this frecency by another frecency, with optional multiplier.
+        NOTE: No attempt is made here to handle differing timescales or other parameters.
+        """
+        log2_multiplier = log2(multiplier)
+        log2_weight_added = frecency_added.log2_value + log2_multiplier
+        self.log2_value = logaddexp2(self.log2_value, log2_weight_added)
+
     def get_present_weight(self, event_time=None):
         """Return the equivalent number of instantaneous events to get the current frecency, at event_time (if given) or present time."""
         if not event_time:

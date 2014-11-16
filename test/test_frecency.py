@@ -13,6 +13,8 @@ from frecency.bootstrap import Bootstrap
 
 
 def approx_equal(float1, float2, tol=0.001):
+    if float2 < 0:
+        tol = -tol
     result = (1. - tol) * float2 <= float1 <= (1. + tol) * float2
     return result
 
@@ -82,6 +84,14 @@ def test_weighted_average():
     assert approx_equal(mean, mean2)
     assert approx_equal(std, std2)
     assert approx_equal(uncertainty * 2 ** .5, uncertainty2)
+    # Test that negative samples are well handled
+    w2 = WeightedAverage()
+    for i in range(num_samples):
+        sample = random.gauss(-1., 1.)
+        w2.add_sample(sample, event_time=now)
+    mean, std, uncertainty = w2.get_mean_std_uncertainty()
+    assert approx_equal(mean, -1., tol=0.01)
+    assert approx_equal(std, 1., tol=0.01)
 
 
 def test_bootstrap():

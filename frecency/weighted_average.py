@@ -16,25 +16,20 @@ from __future__ import absolute_import
 from . import frecency
 
 
-OFFSET_DEFAULT = -1e-5  # Constant to help handle negative samples
+EPSILON = 1e-5
+OFFSET_DEFAULT = -EPSILON  # Constant to help handle negative samples
 
 
 class WeightedAverage(object):
-    """Exponentially weighted average of a variable sampled over time.
-    NOTE: The underlying data structure requires that all samples be greater
-    than the initially given 'offset' value."""
-    # TODO: Arbitrary values could potentially be accepted by keeping
-    # an offset value
-    def __init__(self, timescale=frecency.DEFAULT_TIMESCALE, offset=OFFSET_DEFAULT):
+    """Exponentially weighted average of a variable sampled over time."""
+    def __init__(self, timescale=frecency.DEFAULT_TIMESCALE):
         """* *timescale* is the halflife of events, in seconds.  With the default (24 hours)
-            an event now counts twice as much as an event 24 hours ago.
-        * *offset* is a value lower (by at least a little) than any sample
-            to be observed."""
+            an event now counts twice as much as an event 24 hours ago."""
         self.n_sum = frecency.Frecency(timescale)  # Weight accumulator
         self.x_sum = frecency.Frecency(timescale)  # Variable accumulator
         self.x2_sum = frecency.Frecency(timescale)  # Variable squared accumulator
         self.timescale = timescale
-        self.offset = offset
+        self.offset = OFFSET_DEFAULT
 
     def _apply_sample_offset(self, sample):
         """Applies the current offset value to the sample, adjusting it
@@ -44,9 +39,35 @@ class WeightedAverage(object):
         maintain an offset value that allows us to correct
         for negative samples in get_mean_std_uncertainty()."""
         if sample <= self.offset:
-            raise ValueError("Samples must be greater than the initialized offset value", sample, self.offset)
+            self._adjust_offset(sample)
         offset_sample = sample - self.offset
         return offset_sample
+
+    def _adjust_offset(self, sample):
+        """If we encounter a sample lower than the current offset, we need
+        to adjust the offset AND the aggregated samples to values
+        as though the offset had always had its new value.
+
+        N = Sum(1)
+        (No dependency on the offset)
+
+        X = Sum(x - off)
+          = Sum(x) - N * off
+
+        X2 = Sum((x - off)**2)
+           = Sum(x**2) - 2 * Sum(x) * off + N * off**2
+        """
+        offset0 = self.offset
+        # By contract, sample will always be negative when this
+        # function is called, so this new offset value will
+        # be slightly lower than the sample
+        offset1 = sample * (1 + EPSILON)
+        
+        self.offset = offset1
+        delta_offset = offset0 - offset1  # Always positive by construction
+        self.x2_sum._increment_by_frecency(self.x_sum, multiplier=2 * delta_offset)
+        self.x2_sum._increment_by_frecency(self.n_sum, multiplier=delta_offset ** 2)
+        self.x_sum._increment_by_frecency(self.n_sum, multiplier=delta_offset)
 
     def add_sample(self, sample, weight=1.0, event_time=None):
         """Incorporate a new sample into the weighted average.
@@ -90,7 +111,7 @@ class WeightedAverage(object):
 if __name__=='__main__':
     import random
     import time
-    w = WeightedAverage(timescale=0.01, offset=-10.)
+    w = WeightedAverage(timescale=0.01)
     start_time = time.time()
     for i in range(100000):
         # sample = random.gauss(10., 1.)
@@ -98,3 +119,7 @@ if __name__=='__main__':
         w.add_sample(sample)
     print("time passed:", time.time() - start_time)
     print(w.get_mean_std_uncertainty())
+    w2 = WeightedAverage()
+    for i in range(10, -11, -1):
+        w2.add_sample(i, event_time=start_time)
+    print(w2.get_mean_std_uncertainty())
