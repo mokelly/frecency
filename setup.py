@@ -25,7 +25,7 @@ install_reqs = parse_requirements('requirements.txt', session=False)
 try:
     req_list = [str(ir.req) for ir in install_reqs]  # Pip version < 20
 except AttributeError:
-    req_list = [str(ir.req) for ir in install_reqs]  # Pip version >= 20
+    req_list = [str(ir.requirement) for ir in install_reqs]  # Pip version >= 20
 
 
 readme = open('README.rst').read()
