@@ -11,18 +11,22 @@ try:
 except ImportError:
     from distutils.core import setup, find_packages
 
-try: # for pip >= 10
+try:  # for pip >= 10
     from pip._internal.req import parse_requirements
-except ImportError: # for pip <= 9.0.3
+except ImportError:  # for pip <= 9.0.3
     from pip.req import parse_requirements
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
     sys.exit()
 
-# http://stackoverflow.com/questions/14399534/how-can-i-reference-requirements-txt-for-the-install-requires-kwarg-in-setuptool
+# https://stackoverflow.com/questions/62114945/attributeerror-parsedrequirement-object-has-no-attribute-req
 install_reqs = parse_requirements('requirements.txt', session=False)
-req_list = [str(ir.req) for ir in install_reqs]
+try:
+    req_list = [str(ir.req) for ir in install_reqs]  # Pip version < 20
+except AttributeError:
+    req_list = [str(ir.req) for ir in install_reqs]  # Pip version >= 20
+
 
 readme = open('README.rst').read()
 # doclink = """
